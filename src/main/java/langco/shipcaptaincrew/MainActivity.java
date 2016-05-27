@@ -30,40 +30,17 @@ public class MainActivity extends AppCompatActivity {
         ImageButton dice_button_4= (ImageButton) findViewById(R.id.dice_button_4);
         ImageButton dice_button_5= (ImageButton) findViewById(R.id.dice_button_5);
         final DiceRoll diceObject = new DiceRoll();
+        
         setDicePictures(diceObject.mDiceList);
-        if (checkForDice(diceObject.mDiceList,4)) {
-            Log.d("Check for Ship", "Ship Found");
-            if (checkForDice(diceObject.mDiceList,5)) {
-                Log.d("Check for Captain", "Captain Found");
-                if (checkForDice(diceObject.mDiceList,6)) {
-                    current_score=findTheScore(diceObject.mDiceList);
-                    Toast.makeText(getApplicationContext(), "You've got a ship, a captain and a crew! Your current score is: "+current_score, Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
+        checkForWin(diceObject.mDiceList);
 
         if (rerollButton != null) {
             rerollButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     player_tries++;
-                    if (player_tries < 3) {
-                        setDicePictures(diceObject.rerollDice(diceObject.mDiceList, dice_to_reroll));
-                        if (checkForDice(diceObject.mDiceList, 4)) {
-                            Toast.makeText(getApplicationContext(), "You've got a ship!", Toast.LENGTH_SHORT).show();
-                            if (checkForDice(diceObject.mDiceList, 5)) {
-                                Toast.makeText(getApplicationContext(), "You've got a ship and a captain!", Toast.LENGTH_SHORT).show();
-                                if (checkForDice(diceObject.mDiceList, 6)) {
-                                    current_score=findTheScore(diceObject.mDiceList);
-                                    Toast.makeText(getApplicationContext(), "You've got a ship, a captain and a crew! Your current score is: "+current_score, Toast.LENGTH_SHORT).show();
-
-                                }
-                            }
-                        }
+                    setDicePictures(diceObject.rerollDice(diceObject.mDiceList, dice_to_reroll));
+                    checkForWin(diceObject.mDiceList);
                     }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Out of Tries", Toast.LENGTH_SHORT).show();
-                    }
-                }
             });
         }
 
@@ -106,17 +83,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
-
-
-
     }
 
     public void clickOnDice(ArrayList<Integer> dice_list, int position) {
         if (dice_to_reroll[position]==0) {
             dice_to_reroll[position]=1;
-
-
             String image_string = "dice"+dice_list.get(position);
             String resource_id_string = "dice_button_"+(position+1);
             int image_id = getResources().getIdentifier(image_string, "drawable", getPackageName());
@@ -181,5 +152,21 @@ public class MainActivity extends AppCompatActivity {
         return return_value;
     }
 
+    public boolean checkForWin(ArrayList<Integer> dice_list) {
+        boolean return_result=false;
+        String toast_result="You need a ship (4)!";
+        if (checkForDice(dice_list, 4)) {
+            toast_result="You've got a ship!";
+            if (checkForDice(dice_list, 5)) {
+                toast_result="You've got a ship and a captain!";
+                if (checkForDice(dice_list, 6)) {
+                    toast_result= "You've got a ship, a captain and a crew! Your current score is: "+findTheScore(dice_list);
+                    return_result=true;
+                }
+            }
+        }
+        Toast.makeText(getApplicationContext(), toast_result, Toast.LENGTH_SHORT).show();
+        return return_result;
+    }
 
 }
