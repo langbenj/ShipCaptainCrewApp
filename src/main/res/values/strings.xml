@@ -6,4 +6,5 @@
     <string name="dice4_alt_text">Dice Number 4</string>
     <string name="dice5_alt_text">Dice Number 5</string>
     <string name="roll_dice_text">Roll Dice</string>
+    <string name="score_title">High Score</string>
 </resources>
