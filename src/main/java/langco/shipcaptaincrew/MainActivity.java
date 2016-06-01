@@ -23,22 +23,19 @@ public class MainActivity extends AppCompatActivity {
     public Player mPlayer4 = new Player();
     public Player mPlayer5 = new Player();
     public Player [] player_list = {mPlayer1,mPlayer2,mPlayer3,mPlayer4,mPlayer5};
-    public boolean rolled_456 = false;
+    public int mCurrentPlayer = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Button rerollButton= (Button) findViewById(R.id.reroll_button);
         final Button nextPlayerButton= (Button) findViewById(R.id.next_player_button);
-        ImageButton dice_button_1= (ImageButton) findViewById(R.id.dice_button_1);
-        ImageButton dice_button_2= (ImageButton) findViewById(R.id.dice_button_2);
-        ImageButton dice_button_3= (ImageButton) findViewById(R.id.dice_button_3);
-        ImageButton dice_button_4= (ImageButton) findViewById(R.id.dice_button_4);
-        ImageButton dice_button_5= (ImageButton) findViewById(R.id.dice_button_5);
         final TextView remaining_tries = (TextView) findViewById(R.id.remaining_tries);
         final DiceRoll diceObject = new DiceRoll();
 
         player_list[0].setAIPlayer(false);
+        lockTheDice(diceObject.mDiceList);
         setDicePictures(diceObject.mDiceList);
         checkForWin(diceObject.mDiceList);
 
@@ -53,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
                     player_tries--;
                     if (player_tries >= 0) {
 
-                        setDicePictures(diceObject.rerollDice(diceObject.mDiceList, dice_to_reroll));
-                        checkForWin(diceObject.mDiceList);
 
                         if (remaining_tries != null) {
                             remaining_tries.setText(String.valueOf(player_tries));
@@ -69,7 +64,10 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                     }
-
+                    diceObject.rerollDice(diceObject.mDiceList, dice_to_reroll);
+                    lockTheDice(diceObject.mDiceList);
+                    setDicePictures(diceObject.mDiceList);
+                    checkForWin(diceObject.mDiceList);
 
 
                     }
@@ -80,15 +78,48 @@ public class MainActivity extends AppCompatActivity {
         if (nextPlayerButton != null) {
             nextPlayerButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
+
+                    if (mCurrentPlayer<4) {
+                        mCurrentPlayer++;
+                    }
+                    else {
+                        mCurrentPlayer=0;
+                    }
+                    TextView player1_title = (TextView) findViewById(R.id.Player1);
+                    TextView player2_title = (TextView) findViewById(R.id.Player2);
+                    TextView player3_title = (TextView) findViewById(R.id.Player3);
+                    TextView player4_title = (TextView) findViewById(R.id.Player4);
+                    TextView player5_title = (TextView) findViewById(R.id.Player5);
+
+                    switch (mCurrentPlayer) {
+                        case 0: player5_title.setVisibility(View.INVISIBLE);
+                            player1_title.setVisibility(View.VISIBLE);
+                            break;
+                        case 1: player1_title.setVisibility(View.INVISIBLE);
+                            player2_title.setVisibility(View.VISIBLE);
+                            break;
+                        case 2: player2_title.setVisibility(View.INVISIBLE);
+                            player3_title.setVisibility(View.VISIBLE);
+                            break;
+                        case 3: player3_title.setVisibility(View.INVISIBLE);
+                            player4_title.setVisibility(View.VISIBLE);
+                            break;
+                        case 4: player4_title.setVisibility(View.INVISIBLE);
+                            player5_title.setVisibility(View.VISIBLE);
+                            break;
+                    }
                     for (int i=0; i<dice_to_reroll.length; i++) {
                         dice_to_reroll[i]=1;
                     }
-                    setDicePictures(diceObject.mDiceList);
+
                     player_tries=2;
                     if (remaining_tries != null) {
                         remaining_tries.setText(String.valueOf(player_tries));
                     }
-                    setDicePictures(diceObject.rerollDice(diceObject.mDiceList, dice_to_reroll));
+
+                    diceObject.rerollDice(diceObject.mDiceList, dice_to_reroll);
+                    lockTheDice(diceObject.mDiceList);
+                    setDicePictures(diceObject.mDiceList);
                     checkForWin(diceObject.mDiceList);
                     nextPlayerButton.setVisibility(View.INVISIBLE);
                     if (rerollButton != null) {
@@ -99,56 +130,35 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        if (dice_button_1!=null) {
-            dice_button_1.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Log.d("Check for Win", String.valueOf(rolled_456));
-                  clickOnDice(diceObject.mDiceList,0);
-                }
-            });
-        }
 
-        if (dice_button_2!=null) {
-            dice_button_2.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    clickOnDice(diceObject.mDiceList,1);
-                }
-            });
-        }
-
-        if (dice_button_3!=null) {
-            dice_button_3.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    clickOnDice(diceObject.mDiceList,2);
-                }
-            });
-        }
-
-        if (dice_button_4!=null) {
-            dice_button_4.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    clickOnDice(diceObject.mDiceList,3);
-                }
-            });
-        }
-
-        if (dice_button_5!=null) {
-            dice_button_5.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    clickOnDice(diceObject.mDiceList,4);
-                }
-            });
-        }
     }
 
-    public void clickOnDice(ArrayList<Integer> dice_list, int position) {
-        if (dice_to_reroll[position]==0) {
-            dice_to_reroll[position]=1;
+    public void lockTheDice(ArrayList<Integer> dice_list) {
+        int wheres_the_4;
+        int wheres_the_5;
+        int wheres_the_6;
+        for (int i=0; i<dice_to_reroll.length; i++) {
+            dice_to_reroll[i]=1;
         }
-        else  {
-            dice_to_reroll[position]=0;
+
+        wheres_the_4=checkForDice(dice_list,4);
+        if (checkForDice(dice_list,4)!=-1) {
+            dice_to_reroll[wheres_the_4]=0;
         }
-        setDicePictures(dice_list);
+
+        wheres_the_5=checkForDice(dice_list,5);
+        if (checkForDice(dice_list,5)!=-1 && checkForDice(dice_list,4)!=-1) {
+            dice_to_reroll[wheres_the_5]=0;
+        }
+
+        wheres_the_6=checkForDice(dice_list,6);
+        if (checkForDice(dice_list,4)!=-1 && checkForDice(dice_list,5)!=-1 && checkForDice(dice_list,6)!=-1) {
+            dice_to_reroll[wheres_the_6]=0;
+        }
+
+        String debug = wheres_the_4+" "+wheres_the_5+" "+wheres_the_6;
+        Log.d("Lock The Dice",debug);
+
     }
 
     public void setDicePictures(ArrayList<Integer> dice_list) {
@@ -173,11 +183,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean checkForDice(ArrayList<Integer> dice_list, int target_value) {
-        boolean ship_found=false;
+    public int checkForDice(ArrayList<Integer> dice_list, int target_value) {
+        int ship_found=-1;
         for (int i=0; i<dice_list.size(); i++) {
             if (dice_list.get(i)==target_value) {
-                ship_found=true;
+                ship_found=i;
+                break;
             }
         }
         return ship_found;
@@ -195,18 +206,22 @@ public class MainActivity extends AppCompatActivity {
     public boolean checkForWin(ArrayList<Integer> dice_list) {
         boolean return_result=false;
         String toast_result="You need a ship (4)!";
-        if (checkForDice(dice_list, 4)) {
+        if (checkForDice(dice_list, 4)!=-1) {
             toast_result="You've got a ship (4)!";
-            if (checkForDice(dice_list, 5)) {
+            if (checkForDice(dice_list, 5)!=-1) {
                 toast_result="You've got a ship and a captain (4,5)!";
-                if (checkForDice(dice_list, 6)) {
+                if (checkForDice(dice_list, 6)!=-1) {
                     int current_score=findTheScore(dice_list);
                     toast_result= "You've got a ship, a captain and a crew (4,5,6)! Your current score is: "+current_score;
                     if (current_score>current_top_score) {
                         current_top_score=current_score;
                         TextView high_score = (TextView) findViewById(R.id.largest_crew);
                         if (high_score != null) {
-                            high_score.setText(String.valueOf(current_top_score));
+                            high_score.setText("Player "+(mCurrentPlayer+1)+" with "+current_top_score);
+                        }
+                        Button nextPlayerButton= (Button) findViewById(R.id.next_player_button);
+                        if (nextPlayerButton != null) {
+                            nextPlayerButton.setVisibility(View.VISIBLE);
                         }
                     }
                     return_result=true;

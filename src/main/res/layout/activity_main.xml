@@ -72,27 +72,19 @@
     android:text="@string/roll_dice_text"
     android:id="@+id/reroll_button"
     android:layout_gravity="bottom"
-    android:layout_alignLeft="@id/dice_button_2"
-    android:layout_alignStart="@id/dice_button_2"
-    android:layout_alignRight="@id/dice_button_2"
-    android:layout_alignEnd="@id/dice_button_2"
-    android:layout_below="@id/dice_button_5"
-    android:layout_marginTop="15dp"
-     />
+    android:layout_below="@+id/dice_button_4"
+    android:layout_alignLeft="@+id/dice_button_4"
+    android:layout_alignStart="@+id/dice_button_4" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next Player"
+        android:text="Turn Complete"
         android:id="@+id/next_player_button"
         android:layout_gravity="bottom"
-        android:layout_alignLeft="@id/dice_button_2"
-        android:layout_alignStart="@id/dice_button_2"
-        android:layout_alignRight="@id/dice_button_2"
-        android:layout_alignEnd="@id/dice_button_2"
-        android:layout_below="@id/dice_button_5"
-        android:layout_marginTop="15dp"
-        android:visibility="invisible" />
+        android:layout_alignTop="@+id/reroll_button"
+        android:layout_alignLeft="@+id/dice_button_5"
+        android:layout_alignStart="@+id/dice_button_5" />
 
 
 
@@ -122,9 +114,9 @@
         android:layout_height="wrap_content"
         android:text="Remaining Tries:  "
         android:id="@+id/remaining_tries_title"
-       android:layout_toRightOf="@+id/largest_crew"
-        android:layout_alignTop="@+id/largest_crew"
-        android:layout_marginLeft="10dp"
+       android:layout_alignLeft="@id/largest_crew_title"
+        android:layout_below="@id/largest_crew_title"
+
         android:textStyle="bold"
         android:textSize="20sp" />
 
@@ -137,5 +129,65 @@
         android:layout_alignTop="@id/remaining_tries_title"
         android:textStyle="bold"
         android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You"
+        android:id="@+id/Player1"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+      />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Player 2"
+        android:id="@+id/Player2"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_toRightOf="@id/Player1"
+        android:layout_alignTop="@id/Player1"
+        android:layout_marginLeft="7dp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Player 3"
+        android:id="@+id/Player3"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_toRightOf="@id/Player2"
+        android:layout_alignTop="@id/Player2"
+        android:layout_marginLeft="7dp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Player 4"
+        android:id="@+id/Player4"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_toRightOf="@id/Player3"
+        android:layout_alignTop="@id/Player3"
+        android:layout_marginLeft="7dp"
+        android:visibility="invisible" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Player 5"
+        android:id="@+id/Player5"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_toRightOf="@id/Player4"
+        android:layout_alignTop="@id/Player4"
+        android:layout_marginLeft="7dp"
+        android:visibility="invisible" />
 
 </RelativeLayout>
